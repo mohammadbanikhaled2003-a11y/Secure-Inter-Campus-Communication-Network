@@ -1,0 +1,84 @@
+# OpenSSL configuration file for Issuing (Intermediate) CA
+# Al al-Bayt University - Secure Inter-Campus Network Project
+
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = ./issuing
+certs             = $dir/certs
+crl_dir           = $dir/crl
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+RANDFILE          = $dir/private/.rand
+
+private_key       = $dir/private/issuing.key.pem
+certificate       = $dir/certs/issuing.cert.pem
+
+crlnumber         = $dir/crlnumber
+crl               = $dir/crl/issuing.crl
+crl_extensions    = crl_ext
+default_crl_days  = 7
+
+default_md        = sha256
+name_opt          = ca_default
+cert_opt          = ca_default
+default_days      = 398
+preserve          = no
+policy            = policy_loose
+
+[ policy_loose ]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+[ req ]
+default_bits        = 2048
+distinguished_name  = req_distinguished_name
+string_mask         = utf8only
+default_md          = sha256
+
+[ req_distinguished_name ]
+countryName                     = Country Name (2 letter code)
+countryName_default             = JO
+organizationName                = Organization Name
+organizationName_default        = Al al-Bayt University
+commonName                      = Common Name
+
+[ server_cert ]
+basicConstraints = critical, CA:FALSE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer:always
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+crlDistributionPoints = @crl_section
+subjectAltName = $ENV::SAN
+
+[ gateway_cert ]
+basicConstraints = critical, CA:FALSE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer:always
+keyUsage = critical, digitalSignature
+extendedKeyUsage = serverAuth, clientAuth, 1.3.6.1.5.5.7.3.17
+crlDistributionPoints = @crl_section
+subjectAltName = $ENV::SAN
+
+[ client_cert ]
+basicConstraints = critical, CA:FALSE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer:always
+keyUsage = critical, digitalSignature
+extendedKeyUsage = clientAuth
+crlDistributionPoints = @crl_section
+subjectAltName = $ENV::SAN
+
+[ crl_section ]
+URI.0 = http://pki.g01.scp.lab/crl/issuing.crl
+
+[ crl_ext ]
+authorityKeyIdentifier = keyid:always

@@ -1,0 +1,72 @@
+# OpenSSL configuration file for Root CA
+# Al al-Bayt University - Secure Inter-Campus Network Project
+
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = ./root
+certs             = $dir/certs
+crl_dir           = $dir/crl
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+RANDFILE          = $dir/private/.rand
+
+# The Root CA key and certificate
+private_key       = $dir/private/ca.key.pem
+certificate       = $dir/certs/ca.cert.pem
+
+# CRL settings
+crlnumber         = $dir/crlnumber
+crl               = $dir/crl/ca.crl.pem
+crl_extensions    = crl_ext
+default_crl_days  = 30
+
+default_md        = sha384
+name_opt          = ca_default
+cert_opt          = ca_default
+default_days      = 1825
+preserve          = no
+policy            = policy_strict
+
+[ policy_strict ]
+countryName             = optional
+stateOrProvinceName     = optional
+organizationName        = match
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+[ req ]
+default_bits        = 4096
+distinguished_name  = req_distinguished_name
+string_mask         = utf8only
+default_md          = sha384
+x509_extensions     = v3_ca
+
+[ req_distinguished_name ]
+countryName                     = Country Name (2 letter code)
+countryName_default             = JO
+organizationName                = Organization Name (eg, company)
+organizationName_default        = Al al-Bayt University
+commonName                      = Common Name (e.g. server FQDN or YOUR name)
+
+[ v3_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:TRUE, pathlen:1
+keyUsage = critical, keyCertSign, cRLSign
+
+[ v3_intermediate_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:TRUE, pathlen:0
+keyUsage = critical, keyCertSign, cRLSign
+crlDistributionPoints = @crl_info
+
+[ crl_info ]
+URI.0 = http://pki.g01.scp.lab/crl/root.crl
+
+[ crl_ext ]
+authorityKeyIdentifier = keyid:always

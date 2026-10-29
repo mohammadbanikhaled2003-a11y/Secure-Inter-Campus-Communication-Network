@@ -1,0 +1,52 @@
+# Security Requirement SR11: Secrets Hygiene
+# NEVER commit private keys, passphrases, real .env, PSKs, p12 files or TLS key-log files
+
+# Real environment files
+lab/.env
+.env
+*.env.local
+
+# Private keys and secrets
+*.key
+*.key.pem
+*.priv
+*.p12
+*.pfx
+*.pkcs12
+*passphrase*
+*password*
+secret*
+*.secret
+
+# PKI sensitive directories
+pki/root/private/
+pki/issuing/private/
+pki/private/
+*.srl
+
+# TLS & Network Keylogs
+*.keylog
+*SSLKEYLOGFILE*
+sslkeylog.log
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+env/
+
+# OS and Editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Transient lab run outputs (keep evidence/ tracked)
+lab/tmp/

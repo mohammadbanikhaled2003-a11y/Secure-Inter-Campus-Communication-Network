@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جامعة آل البيت - بوابة الخدمات الجامعية الموحدة</title>
+    <style>
+        :root {
+            --primary: #004d40;
+            --primary-light: #00796b;
+            --accent: #ffb300;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: var(--primary-light);
+        }
+        .status-box {
+            background: #ecfdf5;
+            border-right: 4px solid #10b981;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+        }
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>جامعة آل البيت - المقر الرئيسي</h1>
+        <p>نظام البوابة الإلكترونية الموحدة للربط الآمن بين الحرمين الجامعيين</p>
+        <span class="badge">🔒 اتصال مشفر عبر TLS 1.3 مع HSTS</span>
+    </header>
+
+    <div class="container">
+        <div class="status-box">
+            <strong>حالة الاتصال:</strong> هذه البوابة العامة متاحة للزوار والطلبة بدون شهادة عميل. جميع البيانات مشفرة باستخدام خوارزميات AEAD الحديثة وسرية تامة للأمام (PFS).
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>بوابة الموظفين وأعضاء الهيئة التدريسية</h3>
+                <p>منطقة مخصصة للموظفين تتطلب مصادقة ثنائية الطرف عبر الشهادة الرقمية (Mutual TLS). لن يسمح بالدخول إلا لحاملي شهادات معتمدة وغير مدرجة في قائمة الحظر.</p>
+                <a href="/staff/" class="btn">دخول منطقة الموظفين (mTLS) &larr;</a>
+            </div>
+
+            <div class="card">
+                <h3>خدمات الشهادات وقائمة الحظر (CRL)</h3>
+                <p>نقطة توزيع قوائم الشهادات الملغاة المعتمدة من Issuing CA لجامعة آل البيت، مفعلة للتحقق الآلي من سلامة الشهادات.</p>
+                <a href="/crl/issuing.crl" class="btn" style="background: #475569;">تحميل قائمة الحظر (CRL)</a>
+            </div>
+
+            <div class="card">
+                <h3>معايير الأمان والتشفير</h3>
+                <p>يعمل هذا الخادم وفق مواصفات NIST SP 800-52 Rev. 2 و RFC 8446، حيث يتم رفض أي بروتوكول قديم أو مفاتيح ضعيفة تلقائياً.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        جامعة آل البيت — كلية الأمير الحسين بن عبد الله لتكنولوجيا المعلومات &copy; 2026/2027<br>
+        مساق بروتوكولات الاتصالات المؤمّنة (1305301)
+    </footer>
+</body>
+</html>

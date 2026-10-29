@@ -1,0 +1,157 @@
+version: '3.8'
+
+services:
+  gw-hq:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: gw-hq
+    hostname: gw-hq
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    sysctls:
+      - net.ipv4.ip_forward=1
+    environment:
+      - NODE_ROLE=gw-hq
+      - GROUP_NUM=${GROUP_NUM:-1}
+      - GROUP_ID=${GROUP_ID:-01}
+    volumes:
+      - ..:/work
+    entrypoint: ["/bin/bash", "/work/lab/roles/entrypoint.sh"]
+    networks:
+      wan_net:
+        ipv4_address: 172.16.${GROUP_NUM:-1}.10
+      hq_lan:
+        ipv4_address: 10.${GROUP_NUM:-1}.1.1
+
+  gw-branch:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: gw-branch
+    hostname: gw-branch
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    sysctls:
+      - net.ipv4.ip_forward=1
+    environment:
+      - NODE_ROLE=gw-branch
+      - GROUP_NUM=${GROUP_NUM:-1}
+      - GROUP_ID=${GROUP_ID:-01}
+    volumes:
+      - ..:/work
+    entrypoint: ["/bin/bash", "/work/lab/roles/entrypoint.sh"]
+    networks:
+      wan_net:
+        ipv4_address: 172.16.${GROUP_NUM:-1}.20
+      branch_lan:
+        ipv4_address: 10.${GROUP_NUM:-1}.2.1
+
+  web-hq:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: web-hq
+    hostname: web-hq
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - NODE_ROLE=web-hq
+      - GROUP_NUM=${GROUP_NUM:-1}
+      - GROUP_ID=${GROUP_ID:-01}
+    volumes:
+      - ..:/work
+    entrypoint: ["/bin/bash", "/work/lab/roles/entrypoint.sh"]
+    networks:
+      hq_lan:
+        ipv4_address: 10.${GROUP_NUM:-1}.1.10
+
+  kdc:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: kdc
+    hostname: kdc
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - NODE_ROLE=kdc
+      - GROUP_NUM=${GROUP_NUM:-1}
+      - GROUP_ID=${GROUP_ID:-01}
+    volumes:
+      - ..:/work
+    entrypoint: ["/bin/bash", "/work/lab/roles/entrypoint.sh"]
+    networks:
+      hq_lan:
+        ipv4_address: 10.${GROUP_NUM:-1}.1.20
+
+  client-br:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: client-br
+    hostname: client-br
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - NODE_ROLE=client-br
+      - GROUP_NUM=${GROUP_NUM:-1}
+      - GROUP_ID=${GROUP_ID:-01}
+    volumes:
+      - ..:/work
+    entrypoint: ["/bin/bash", "/work/lab/roles/entrypoint.sh"]
+    networks:
+      branch_lan:
+        ipv4_address: 10.${GROUP_NUM:-1}.2.10
+
+  attacker:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: attacker
+    hostname: attacker
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - NODE_ROLE=attacker
+      - GROUP_NUM=${GROUP_NUM:-1}
+      - GROUP_ID=${GROUP_ID:-01}
+    volumes:
+      - ..:/work
+    entrypoint: ["/bin/bash", "/work/lab/roles/entrypoint.sh"]
+    networks:
+      wan_net:
+        ipv4_address: 172.16.${GROUP_NUM:-1}.66
+
+networks:
+  wan_net:
+    name: wan_net
+    ipam:
+      config:
+        - subnet: 172.16.${GROUP_NUM:-1}.0/24
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "false"
+
+  hq_lan:
+    name: hq_lan
+    ipam:
+      config:
+        - subnet: 10.${GROUP_NUM:-1}.1.0/24
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "false"
+
+  branch_lan:
+    name: branch_lan
+    ipam:
+      config:
+        - subnet: 10.${GROUP_NUM:-1}.2.0/24
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "false"
