@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقرير ما تم إنجازه في المرحلة الأولى (Phase 1 Accomplishments) - Secure Inter-Campus Network</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #3b82f6;
+      --secondary: #0d9488;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .presentation-container {
+      width: 100%;
+      max-width: 1120px;
+      height: 700px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-bar {
+      padding: 16px 28px;
+      background: rgba(15, 23, 42, 0.7);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slide-badge {
+      background: var(--primary);
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .slide-content-area {
+      flex: 1;
+      padding: 28px 40px;
+      overflow-y: auto;
+      display: none;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+
+    .slide-content-area.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 25px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .slide-subtitle {
+      font-size: 14.5px;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      border-right: 4px solid var(--primary-light);
+    }
+
+    .info-box.accent { border-right-color: var(--accent); }
+    .info-box.success { border-right-color: var(--success); }
+    .info-box.danger { border-right-color: var(--danger); }
+
+    .info-box h3 {
+      font-size: 15.5px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-box ul { list-style-type: none; padding-right: 4px; }
+
+    .info-box li {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      position: relative;
+      padding-right: 18px;
+      line-height: 1.5;
+    }
+
+    .info-box li::before {
+      content: "✔";
+      color: var(--success);
+      position: absolute;
+      right: 0;
+      font-weight: bold;
+    }
+
+    .mono-code {
+      font-family: 'JetBrains Mono', monospace;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #38bdf8;
+      direction: ltr;
+      text-align: left;
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 9px 12px;
+      text-align: right;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    td { color: var(--text-muted); }
+
+    .tag-critical {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .tag-high {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .footer-bar {
+      padding: 14px 28px;
+      background: rgba(15, 23, 42, 0.7);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--card-border);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover:not(:disabled) { background: var(--primary); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .speaker-note {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px dashed var(--accent);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #fcd34d;
+      margin-top: 12px;
+    }
+
+    .timeline-indicator { display: flex; gap: 6px; }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .timeline-dot.active {
+      background: var(--primary-light);
+      width: 24px;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presentation-container">
+    <div class="header-bar">
+      <div class="header-title">
+        <span>🛡️ جامعة آل البيت | تقرير إنجاز المرحلة الأولى</span>
+        <span>•</span>
+        <span>Phase 1 Accomplishments Report</span>
+      </div>
+      <div class="slide-badge" id="slideBadge">شريحة 1 من 5</div>
+    </div>
+
+    <!-- Slide 1 -->
+    <div class="slide-content-area active" id="slide1">
+      <h1>الشريحة 1: ملخص ما قمنا بإنجازه في المرحلة الأولى (Executive Summary)</h1>
+      <div class="slide-subtitle">تأسيس البنية الهندسية والتحليلية الشاملة لشبكة الاتصالات الجامعية الآمنة</div>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <h3>🎯 ما تم إنجازه هندسياً في المرحلة الأولى</h3>
+          <ul>
+            <li><strong>تأسيس متطلبات النظام:</strong> قمنا بصياغة واعتماد 12 مطلباً وظيفياً (FR01–FR12) و 14 مطلباً أمنياً إلزامياً (SR01–SR14).</li>
+            <li><strong>تحديد حالات الاستخدام (Use Cases):</strong> قمنا بنمذجة مسارات تفاعل الزائر العام، الموظف الإداري، والأنظمة الداخلية (UC01–UC04).</li>
+            <li><strong>اعتماد المعايير التشفيرية الحديثة:</strong> استبعدنا تماماً الخوارزميات الضعيفة (MD5, SHA1, DES) واعتمدنا المنحنيات الإهليلجية والتشفير المصادق.</li>
+            <li><strong>تجهيز بيئة العمل للتنفيذ:</strong> قمنا بتوزيع مهام أعضاء الفريق الـ 3 وربط كل متطلب بفحص قبول دقيق للمراحل اللاحقة.</li>
+          </ul>
+        </div>
+
+        <div class="info-box success">
+          <h3>📦 وثائق التصميم التي قمنا بإتمامها (docs/M1/)</h3>
+          <ul>
+            <li><code>M1_Requirements.md</code>: مواصفات المتطلبات وحالات الاستخدام.</li>
+            <li><code>M1_Topology_Trust.md</code>: معمارية المعمل وحدود الثقة الأربعة.</li>
+            <li><code>M1_PKI_Design.md</code>: هندسة الـ PKI ثنائية الطبقات وسياسة CRL.</li>
+            <li><code>M1_ProtocolDesign.md</code>: مخططات تسلسل TLS و IPsec و Kerberos.</li>
+            <li><code>M1_STRIDE.md</code>: مصفوفة تحليل التهديدات والضوابط.</li>
+            <li><code>M1_TeamPlan.md</code>: خطة العمل وتوزيع الأدوار والجدول الزمني.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        💬 <strong>ما تشرحه:</strong> "في هذه المرحلة، قمنا بإنجاز التحليل النظري والهندسي المتكامل للمشروع؛ أسسنا 12 مطلباً وظيفياً و 14 ضابطاً أمنياً، ليكون التنفيذ في المراحل التالية مبنياً على أسس معيارية دقيقة."
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide-content-area" id="slide2">
+      <h1>الشريحة 2: ما قمنا به في معمارية المعمل وحدود الثقة (Topology & Trust)</h1>
+      <div class="slide-subtitle">بناء وتوزيع 6 عقد شبكية مستقلة ورسم حدود الثقة الأربعة الصارمة</div>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <h3>🌐 ما قمنا ببنائه في طوبولوجيا المعمل</h3>
+          <ul>
+            <li><strong>شبكة المقر الرئيسي (HQ LAN: <code>10.G.1.0/24</code>):</strong>
+              <br>• أنشأنا بوابة المقر <code>gw-hq</code> كنقطة ربط للـ VPN.
+              <br>• خصصنا خادم <code>web-hq</code> للبوابة ومنطقة الموظفين ومستودع CRL.
+              <br>• خصصنا عقدة <code>kdc</code> لمركز توزيع مفاتيح Kerberos.
+            </li>
+            <li><strong>شبكة الفرع (Branch LAN: <code>10.G.2.0/24</code>):</strong>
+              <br>• أنشأنا بوابة الفرع <code>gw-branch</code> وحاسوب الموظف <code>client-br</code>.
+            </li>
+            <li><strong>شبكة الـ WAN غير الموثوقة (<code>172.16.G.0/24</code>):</strong>
+              <br>• خصصنا عقدة المهاجم <code>attacker</code> لمحاكاة التنصت والاختراق.
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-box danger">
+          <h3>🛡️ حدود الثقة الأربعة التي قمنا برسمها</h3>
+          <ul>
+            <li><strong>TB0 (Offline Root Authority):</strong> قمنا بعزل مفتاح الـ Root CA خارج الشبكة والحاويات تماماً لمنع أي اختراق عبر الشبكة.</li>
+            <li><strong>TB1 (HQ Protected Perimeter):</strong> النطاق الآمن لمقر الجامعة والخدمات المركزية.</li>
+            <li><strong>TB2 (Branch Perimeter):</strong> نطاق فرع الجامعة الموثوق محلياً.</li>
+            <li><strong>TB3 (Untrusted WAN):</strong> مسار العبور غير الموثوق المعرض للتنصت والتلاعب.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mono-code">
+Branch LAN (10.G.2.0/24)  ---[ gw-branch ]=== [ Untrusted WAN (172.16.G.0/24) ] ===[ gw-hq ]--- HQ LAN (10.G.1.0/24)
+client-br (10.G.2.10)                        attacker (172.16.G.66)                         web-hq (10.G.1.10) & kdc
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide-content-area" id="slide3">
+      <h1>الشريحة 3: ما قمنا به في هندسة الـ PKI وسياسات التشفير</h1>
+      <div class="slide-subtitle">تصميم هيكلية PKI ثنائية الطبقات، ملفات تعريف الشهادات، وسياسة Hard-Fail</div>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <h3>🌳 تصميم الـ PKI ثنائي الطبقات (Two-Tier)</h3>
+          <ul>
+            <li><strong>Root CA (Offline):</strong> قمنا باختيار منحنى <code>ECDSA P-384</code> مع <code>SHA-384</code> وصلاحية 5 سنوات وقيد مسار <code>pathlen:1</code> بحيث يوقع حصراً لسلطة الإصدار فقط.</li>
+            <li><strong>Issuing CA (Online):</strong> قمنا بتصميمه بمنحنى <code>ECDSA P-384</code> وصلاحية سنتين وقيد <code>pathlen:0</code> لتوقيع الشهادات للكيانات ونشر الـ CRL.</li>
+            <li><strong>ملفات التعريف (Profiles):</strong> حددنا قيود صارمة للحقول (serverAuth للخادم، ipsecIKE للبوابات، و clientAuth للموظفين).</li>
+          </ul>
+        </div>
+
+        <div class="info-box accent">
+          <h3>🚫 اعتماد سياسة الإلغاء الصارم (Hard-Fail CRL)</h3>
+          <ul>
+            <li><strong>حللنا ثغرة Soft-Fail:</strong> أدركنا أن الأنظمة التي تفشل بنمط "Soft-Fail" تسمح بمرور الشهادات الملغاة إذا حجب المهاجم خادم الـ CRL.</li>
+            <li><strong>قرارنا الهندسي:</strong> فرضنا سياسة <strong>Hard-Fail</strong> في Nginx و strongSwan لرفض أي شهادة فوراً إذا لم يتم التأكد من خلوها من قائمة الإلغاء الحديثة.</li>
+            <li><strong>إدارة الأسرار (SR11):</strong> فرضنا إخفاء كافة المفاتيح الخاصة من Git وتطبيق صلاحيات 600.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        💬 <strong>ما تشرحه:</strong> "صممنا نظام PKI متين يفصل الـ Root CA عن الاتصال بالشبكة لحمايته، وحددنا بصمات تشفير دقيقة لكل شهادة، واعتمدنا Hard-Fail لسد ثغرة حجب الـ CRL الشائعة."
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide-content-area" id="slide4">
+      <h1>الشريحة 4: ما قمنا به في هندسة البروتوكولات ونمذجة التهديدات</h1>
+      <div class="slide-subtitle">مخططات تسلسل الرسائل التشفيرية ومصفوفة STRIDE الشاملة</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>عنصر STRIDE</th>
+            <th>التهديد الذي قمنا بتحليله</th>
+            <th>مستوى الخطر</th>
+            <th>الضابط الأمني الذي قمنا بهندسته</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Information Disclosure</strong></td>
+            <td>التنصت على حركة البيانات الصريحة على الـ WAN (TH-01)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>نفق IKEv2/IPsec مشفر بـ AES-GCM وسرية تامة للأمام (PFS)</td>
+          </tr>
+          <tr>
+            <td><strong>Spoofing</strong></td>
+            <td>اعتراض الاتصال بشهادة خادم مزورة Rogue CA (TH-02)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>التحقق الصارم من سلسلة الشهادات وصولاً لـ Root CA فقط</td>
+          </tr>
+          <tr>
+            <td><strong>Elevation of Privilege</strong></td>
+            <td>دخول موظف مفصول بشهادة ملغاة إلى <code>/staff/</code> (TH-03)</td>
+            <td><span class="tag-high">HIGH</span></td>
+            <td>فحص الـ CRL اللحظي عبر mTLS وإرجاع خطأ عام 403</td>
+          </tr>
+          <tr>
+            <td><strong>Spoofing</strong></td>
+            <td>محاولة بوابة وهمية إنشاء نفق VPN (TH-04)</td>
+            <td><span class="tag-high">HIGH</span></td>
+            <td>تثبيت هوية البوابة (Identity Pinning) وفحص EKU مخصص</td>
+          </tr>
+          <tr>
+            <td><strong>Information Disclosure</strong></td>
+            <td>تسرب الحزم صريحة عند سقوط النفق Fail-Open (TH-05)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>جدار حماية <strong>Fail-Closed</strong> يسقط أي حزم غير مشفرة</td>
+          </tr>
+          <tr>
+            <td><strong>Replay / Elevation</strong></td>
+            <td>إعادة إرسال تذاكر المصادقة المسروقة (TH-07)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>طوابع زمنية 300s واستخدام <strong>Replay Cache</strong> لمنع التكرار</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="speaker-note">
+        💬 <strong>ما تشرحه:</strong> "قمنا برسم مخططات تسلسل الرسائل لبروتوكولات TLS 1.3 mTLS و IKEv2 و Kerberos، وعالجنا 10 ثغرات محتملة بنموذج STRIDE وربطناها بضوابط تشفير واضحة."
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide-content-area" id="slide5">
+      <h1>الشريحة 5: مخرجات المرحلة المنجزة والجاهزية لـ Phase 2</h1>
+      <div class="slide-subtitle">اكتمال ملفات التوثيق، خط الأساس الأمني، وخطة الانتقال للمرحلة العملية</div>
+
+      <div class="grid-2">
+        <div class="info-box success">
+          <h3>✅ ما تم تسليمه بالكامل في المرحلة الأولى</h3>
+          <ul>
+            <li><strong>6 وثائق تصميم شاملة:</strong> في مجلد <code>docs/M1/</code> تشمل المتطلبات، الطوبولوجيا، الـ PKI، البروتوكولات، STRIDE، وخطة الفريق.</li>
+            <li><strong>ملف توثيق خط الأساس (Baseline PCAP):</strong> تجهيز سيناريو التقاط حركة المرور غير المشفرة <code>M1_baseline_wan.pcap</code> لإثبات حاجة النظام للتأمين.</li>
+            <li><strong>توزيع مهام الفريق الـ 3:</strong> مسؤول التشفير، مسؤول الشبكات والـ VPN، ومسؤول أمن التطبيقات.</li>
+          </ul>
+        </div>
+
+        <div class="info-box accent">
+          <h3>🚀 الجاهزية الكاملة للانتقال إلى المرحلة الثانية (M2)</h3>
+          <ul>
+            <li><strong>أتمتة الـ PKI:</strong> سكربتات <code>build_pki.sh</code> و <code>issue.sh</code> و <code>revoke.sh</code>.</li>
+            <li><strong>أداة التشفير البرمجية:</strong> برمجة <code>crypto/scpcrypt.py</code> واختبار نواقل RFC 4231 و 8032.</li>
+            <li><strong>بوابة الويب المؤمنة:</strong> تشغيل Nginx بـ TLS 1.3 وتفعيل الـ mTLS على <code>/staff/</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mono-code" style="text-align: center; font-size: 13px;">
+git status → All M1 design docs verified → git tag M1 → Ready for Phase 2 Implementation!
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="footer-bar">
+      <button class="btn" id="prevBtn" onclick="prevSlide()" disabled>
+        <span>◀</span> الشريحة السابقة
+      </button>
+
+      <div class="timeline-indicator" id="timelineIndicator">
+        <div class="timeline-dot active" onclick="goToSlide(0)"></div>
+        <div class="timeline-dot" onclick="goToSlide(1)"></div>
+        <div class="timeline-dot" onclick="goToSlide(2)"></div>
+        <div class="timeline-dot" onclick="goToSlide(3)"></div>
+        <div class="timeline-dot" onclick="goToSlide(4)"></div>
+      </div>
+
+      <button class="btn" id="nextBtn" onclick="nextSlide()">
+        الشريحة التالية <span>▶</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 5;
+
+    function updateSlide() {
+      for (let i = 0; i < totalSlides; i++) {
+        const slide = document.getElementById(`slide${i+1}`);
+        const dot = document.getElementsByClassName('timeline-dot')[i];
+        if (i === currentSlide) {
+          slide.classList.add('active');
+          dot.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+          dot.classList.remove('active');
+        }
+      }
+
+      document.getElementById('slideBadge').innerText = `شريحة ${currentSlide + 1} من ${totalSlides}`;
+      document.getElementById('prevBtn').disabled = (currentSlide === 0);
+      document.getElementById('nextBtn').disabled = (currentSlide === totalSlides - 1);
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlide();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        prevSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        nextSlide();
+      }
+    });
+  </script>
+</body>
+</html>
