@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 1 Engineering Defense - Secure Inter-Campus Network (Group 06)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #60a5fa;
+      --secondary: #0d9488;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .presentation-container {
+      width: 100%;
+      max-width: 1120px;
+      height: 700px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-bar {
+      padding: 16px 28px;
+      background: rgba(15, 23, 42, 0.7);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slide-badge {
+      background: var(--primary);
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .slide-content-area {
+      flex: 1;
+      padding: 28px 40px;
+      overflow-y: auto;
+      display: none;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+
+    .slide-content-area.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .slide-subtitle {
+      font-size: 14px;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      border-left: 4px solid var(--primary-light);
+    }
+
+    .info-box.accent { border-left-color: var(--accent); }
+    .info-box.success { border-left-color: var(--success); }
+    .info-box.danger { border-left-color: var(--danger); }
+
+    .info-box h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-box ul { list-style-type: none; padding-left: 4px; }
+
+    .info-box li {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 18px;
+      line-height: 1.5;
+    }
+
+    .info-box li::before {
+      content: "✔";
+      color: var(--success);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    .mono-code {
+      font-family: 'JetBrains Mono', monospace;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #38bdf8;
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 9px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    td { color: var(--text-muted); }
+
+    .tag-critical {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .tag-high {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .footer-bar {
+      padding: 14px 28px;
+      background: rgba(15, 23, 42, 0.7);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--card-border);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover:not(:disabled) { background: var(--primary); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .speaker-note {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px dashed var(--accent);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #fcd34d;
+      margin-top: 12px;
+    }
+
+    .timeline-indicator { display: flex; gap: 6px; }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .timeline-dot.active {
+      background: var(--primary-light);
+      width: 24px;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presentation-container">
+    <div class="header-bar">
+      <div class="header-title">
+        <span>🛡️ Al al-Bayt University | Course 1305301 - Group 06</span>
+        <span>•</span>
+        <span>Phase 1 (Milestone 1) Defense</span>
+      </div>
+      <div class="slide-badge" id="slideBadge">Slide 1 of 5</div>
+    </div>
+
+    <!-- Slide 1 -->
+    <div class="slide-content-area active" id="slide1">
+      <h1>Slide 1: Executive Summary & M1 Accomplishments</h1>
+      <div class="slide-subtitle">Analysis, Architecture Design & Baseline Verification (4 Marks / Git Tag: M1)</div>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <h3>🎯 Core Engineering Scope</h3>
+          <ul>
+            <li><strong>Theoretical & Architectural Foundation:</strong> Comprehensive specification of cryptographic controls and trust models prior to code execution.</li>
+            <li><strong>Requirements Matrix:</strong> Formulated 12 Functional Requirements (FR01–FR12) and 14 Mandatory Security Requirements (SR01–SR14).</li>
+            <li><strong>Primary Use Cases:</strong> Documented interaction flows for Public Visitors (UC01), Staff mTLS (UC02), Kerberos Access (UC03), and PKI Admins (UC04).</li>
+            <li><strong>Strict Crypto Hygiene (SR01):</strong> Prohibited legacy algorithms (MD5, SHA1, 3DES, RC4) and standardized modern primitives (ECDSA, AES-GCM, PFS).</li>
+          </ul>
+        </div>
+
+        <div class="info-box success">
+          <h3>📦 Complete Documentation Package (docs/M1/)</h3>
+          <ul>
+            <li><code>M1_Requirements.md</code>: System requirements & use case flows.</li>
+            <li><code>M1_Topology_Trust.md</code>: 6-node network grid & 4 trust boundaries.</li>
+            <li><code>M1_PKI_Design.md</code>: Two-Tier CA hierarchy & certificate profiles.</li>
+            <li><code>M1_ProtocolDesign.md</code>: Sequence diagrams (TLS 1.3, IKEv2, Kerberos).</li>
+            <li><code>M1_STRIDE.md</code>: Comprehensive threat analysis matrix.</li>
+            <li><code>M1_TeamPlan.md</code>: Work breakdown, role allocation & Git releases.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        💬 <strong>Speaker Note:</strong> "Milestone 1 establishes the rigorous engineering design of our inter-campus infrastructure, eliminating guesswork and defining strict boundaries before hands-on implementation."
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide-content-area" id="slide2">
+      <h1>Slide 2: Lab Topology & Four Trust Boundaries</h1>
+      <div class="slide-subtitle">Six-Node Isolated Grid (Group 06: Subnets 10.6.1.0/24, 10.6.2.0/24, 172.16.6.0/24)</div>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <h3>🌐 Six Virtual Nodes Architecture</h3>
+          <ul>
+            <li><strong>HQ Campus LAN (<code>10.6.1.0/24</code>):</strong>
+              <br>• <code>gw-hq</code> (10.6.1.1 / 172.16.6.10): Security gateway & IPsec tunnel end.
+              <br>• <code>web-hq</code> (10.6.1.10): Web portal, mTLS staff area & CRL HTTP point.
+              <br>• <code>kdc</code> (10.6.1.20): Kerberos Key Distribution Center (TCP 8800).
+            </li>
+            <li><strong>Branch Campus LAN (<code>10.6.2.0/24</code>):</strong>
+              <br>• <code>gw-branch</code> (10.6.2.1 / 172.16.6.20): Branch gateway & IPsec peer.
+              <br>• <code>client-br</code> (10.6.2.10): Staff workstation initiating secured requests.
+            </li>
+            <li><strong>Untrusted Carrier WAN (<code>172.16.6.0/24</code>):</strong>
+              <br>• <code>attacker</code> (172.16.6.66): Red-team node executing packet capture & attacks.
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-box danger">
+          <h3>🛡️ Four Explicit Trust Boundaries</h3>
+          <ul>
+            <li><strong>TB0 (Offline Root CA Realm):</strong> Air-gapped root authority protected with passphrase and isolated from networks and containers.</li>
+            <li><strong>TB1 (HQ Protected Perimeter):</strong> High-trust internal network hosting sensitive academic databases and ticket services.</li>
+            <li><strong>TB2 (Branch Perimeter):</strong> Authenticated local employee subnet requiring encrypted inter-campus transit.</li>
+            <li><strong>TB3 (Untrusted WAN Transit):</strong> Zero-trust network assumed to be fully compromised by active adversaries.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mono-code">
+Branch LAN (10.6.2.0/24)  ---[ gw-branch ]=== [ Untrusted WAN (172.16.6.0/24) ] ===[ gw-hq ]--- HQ LAN (10.6.1.0/24)
+client-br (10.6.2.10)                        attacker (172.16.6.66)                         web-hq (10.6.1.10) & kdc
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide-content-area" id="slide3">
+      <h1>Slide 3: Two-Tier PKI Architecture & Revocation Policy</h1>
+      <div class="slide-subtitle">Strict Profile Enforcement & Mitigation of the Soft-Fail Revocation Flaw</div>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <h3>🌳 Two-Tier CA Hierarchy</h3>
+          <ul>
+            <li><strong>Root CA (Offline):</strong> ECDSA P-384, 5-year validity, <code>pathlen:1</code> constraint. Used exclusively for one-time signing of Issuing CA.</li>
+            <li><strong>Issuing CA (Online):</strong> ECDSA P-384, 2-year validity, <code>pathlen:0</code> constraint. Signs end-entity leaf certificates and publishes signed CRL.</li>
+            <li><strong>Certificate Profiles:</strong>
+              <br>• Portal: <code>serverAuth</code> with SAN <code>portal.g06.scp.lab</code>.
+              <br>• Gateways: <code>serverAuth, clientAuth, 1.3.6.1.5.5.7.3.17 (ipsecIKE)</code>.
+              <br>• Staff: <code>clientAuth</code> with personal verified email SAN.
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-box accent">
+          <h3>🚫 Hard-Fail Revocation Mandate</h3>
+          <ul>
+            <li><strong>The "Soft-Fail" Flaw:</strong> If CRL download fails or is actively blocked by an attacker, vulnerable validators proceed and accept revoked certificates.</li>
+            <li><strong>Our Engineering Decision:</strong> We mandate <strong>Hard-Fail</strong> in Nginx and strongSwan. If the certificate cannot be validated against a valid, unexpired CRL, it is immediately rejected.</li>
+            <li><strong>Public Distribution:</strong> CRL published over plain HTTP at <code>http://pki.g06.scp.lab/crl/issuing.crl</code> to prevent recursive TLS deadlocks (RFC 5280).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        💬 <strong>Speaker Note:</strong> "We eliminated single-tier CA risks and prevented MITM attacks through ECDSA P-384 keys, path length constraints, and strict Hard-Fail CRL checking."
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide-content-area" id="slide4">
+      <h1>Slide 4: Protocols & STRIDE Threat Analysis</h1>
+      <div class="slide-subtitle">Message Sequence Flows & Mapping Threats to Acceptance Tests (T1–T13)</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>STRIDE Category</th>
+            <th>Identified Threat</th>
+            <th>Risk Level</th>
+            <th>Architectural Countermeasure</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Information Disclosure</strong></td>
+            <td>Eavesdropping on WAN cleartext traffic (TH-01)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>IKEv2 IPsec site-to-site tunnel with AES-256-GCM and PFS (Curve25519)</td>
+          </tr>
+          <tr>
+            <td><strong>Spoofing</strong></td>
+            <td>Rogue CA Man-in-the-Middle attack (TH-02)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>Strict client validation enforcing offline Root CA trust anchor</td>
+          </tr>
+          <tr>
+            <td><strong>Elevation of Privilege</strong></td>
+            <td>Revoked employee certificate accessing <code>/staff/</code> (TH-03)</td>
+            <td><span class="tag-high">HIGH</span></td>
+            <td>Nginx mTLS verification with live CRL checking and HTTP 403 response</td>
+          </tr>
+          <tr>
+            <td><strong>Spoofing</strong></td>
+            <td>Gateway impersonation via stolen staff cert (TH-04)</td>
+            <td><span class="tag-high">HIGH</span></td>
+            <td>Gateway identity pinning (<code>gw-branch.g06.scp.lab</code>) & dedicated ipsecIKE EKU</td>
+          </tr>
+          <tr>
+            <td><strong>Information Disclosure</strong></td>
+            <td>Cleartext leak upon IPsec tunnel failure (TH-05)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>Fail-Closed firewall (<code>gw_firewall.sh</code>) dropping any non-ESP inter-LAN traffic</td>
+          </tr>
+          <tr>
+            <td><strong>Replay Attack</strong></td>
+            <td>Sniffing and replaying authentication tickets (TH-07)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>300-second freshness window and in-memory Replay Cache</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="speaker-note">
+        💬 <strong>Speaker Note:</strong> "Every identified STRIDE threat is bound to a specific cryptographic protocol rule and automated acceptance test (Tests T1–T13)."
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide-content-area" id="slide5">
+      <h1>Slide 5: Deliverables Checklist & Phase 2 Readiness</h1>
+      <div class="slide-subtitle">Verified Baseline PCAP, Team Breakdown & Next Steps for Milestone 2</div>
+
+      <div class="grid-2">
+        <div class="info-box success">
+          <h3>✅ Milestone 1 Deliverables Summary</h3>
+          <ul>
+            <li><strong>6 Formal Specifications:</strong> Complete Markdown specifications stored in <code>docs/M1/</code>.</li>
+            <li><strong>Baseline Traffic Evidence Plan:</strong> Capturing cleartext WAN packets (<code>M1_baseline_wan.pcap</code>) to demonstrate cleartext exposure prior to encryption.</li>
+            <li><strong>Group 06 Configuration:</strong> All subnets, DNS records, and certificates mapped to Group 06.</li>
+            <li><strong>Version Control Tag:</strong> Pushed under official Git tag <code>M1</code>.</li>
+          </ul>
+        </div>
+
+        <div class="info-box accent">
+          <h3>🚀 Phase 2 (M2) Implementation Roadmap</h3>
+          <ul>
+            <li><strong>Automated PKI Generation:</strong> Run <code>pki/build_pki.sh</code> to generate Root CA, Issuing CA, and all X.509 certs.</li>
+            <li><strong>Cryptographic CLI Tool:</strong> Implement <code>crypto/scpcrypt.py</code> (HMAC, AEAD, digital signatures) passing RFC 4231 & 8032 test vectors.</li>
+            <li><strong>Hardened TLS Web Server:</strong> Deploy Nginx HTTPS portal with mTLS on <code>/staff/</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mono-code" style="text-align: center; font-size: 13px;">
+git status → All M1 design deliverables verified → Tagged M1 → 100% Ready for Phase 2 Implementation!
+      </div>
+    </div>
+
+    <!-- Footer Controls -->
+    <div class="footer-bar">
+      <button class="btn" id="prevBtn" onclick="prevSlide()" disabled>
+        <span>◀</span> Previous Slide
+      </button>
+
+      <div class="timeline-indicator" id="timelineIndicator">
+        <div class="timeline-dot active" onclick="goToSlide(0)"></div>
+        <div class="timeline-dot" onclick="goToSlide(1)"></div>
+        <div class="timeline-dot" onclick="goToSlide(2)"></div>
+        <div class="timeline-dot" onclick="goToSlide(3)"></div>
+        <div class="timeline-dot" onclick="goToSlide(4)"></div>
+      </div>
+
+      <button class="btn" id="nextBtn" onclick="nextSlide()">
+        Next Slide <span>▶</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 5;
+
+    function updateSlide() {
+      for (let i = 0; i < totalSlides; i++) {
+        const slide = document.getElementById(`slide${i+1}`);
+        const dot = document.getElementsByClassName('timeline-dot')[i];
+        if (i === currentSlide) {
+          slide.classList.add('active');
+          dot.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+          dot.classList.remove('active');
+        }
+      }
+
+      document.getElementById('slideBadge').innerText = `Slide ${currentSlide + 1} of ${totalSlides}`;
+      document.getElementById('prevBtn').disabled = (currentSlide === 0);
+      document.getElementById('nextBtn').disabled = (currentSlide === totalSlides - 1);
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlide();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>
+
