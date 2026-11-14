@@ -78,7 +78,7 @@ crlDistributionPoints = @crl_section
 subjectAltName = $ENV::SAN
 
 [ crl_section ]
-URI.0 = http://pki.g01.scp.lab/crl/issuing.crl
+URI.0 = http://pki.g06.scp.lab/crl/issuing.crl
 
 [ crl_ext ]
 authorityKeyIdentifier = keyid:always

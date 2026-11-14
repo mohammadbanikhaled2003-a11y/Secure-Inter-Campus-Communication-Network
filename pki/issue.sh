@@ -19,8 +19,8 @@ if [ -f ../lab/.env ]; then
   set +a
 fi
 
-GROUP_ID="${GROUP_ID:-01}"
-GROUP_NUM="${GROUP_NUM:-1}"
+GROUP_ID="${GROUP_ID:-06}"
+GROUP_NUM="${GROUP_NUM:-6}"
 
 mkdir -p certs_out
 

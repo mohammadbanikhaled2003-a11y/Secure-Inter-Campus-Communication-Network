@@ -66,7 +66,7 @@ keyUsage = critical, keyCertSign, cRLSign
 crlDistributionPoints = @crl_info
 
 [ crl_info ]
-URI.0 = http://pki.g01.scp.lab/crl/root.crl
+URI.0 = http://pki.g06.scp.lab/crl/root.crl
 
 [ crl_ext ]
 authorityKeyIdentifier = keyid:always

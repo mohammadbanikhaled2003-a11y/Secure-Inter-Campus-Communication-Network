@@ -16,7 +16,7 @@ if [ -f ../../lab/.env ]; then
   set +a
 fi
 
-GROUP_ID="${GROUP_ID:-01}"
+GROUP_ID="${GROUP_ID:-06}"
 PORTAL_DOMAIN="portal.g${GROUP_ID}.scp.lab"
 TARGET_PORT="${1:-8443}"
 

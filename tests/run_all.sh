@@ -19,7 +19,7 @@ exec > >(tee -a "${TEST_LOG}") 2>&1
 echo "======================================================================"
 echo " Starting Automated Acceptance Test Suite: Tests T1 to T13"
 echo " Date: $(date -u)"
-echo " Environment: Docker Isolated Lab (Group: ${GROUP_ID:-01})"
+echo " Environment: Docker Isolated Lab (Group: ${GROUP_ID:-06})"
 echo "======================================================================"
 
 PASSED_COUNT=0
