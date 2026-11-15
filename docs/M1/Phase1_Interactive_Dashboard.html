@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 1 Interactive Simulation Dashboard - Group 06</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #121929;
+      --card-border: #1e293b;
+      --primary: #2563eb;
+      --primary-light: #60a5fa;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+    }
+
+    .title-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .title-area h1 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .badge-group {
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid var(--primary-light);
+      color: #93c5fd;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .badge-phase {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid var(--accent);
+      color: #fde68a;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-link {
+      background: #1e293b;
+      color: #f8fafc;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-link:hover {
+      background: var(--primary);
+      border-color: var(--primary-light);
+    }
+
+    /* Top Stats Grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .stat-info h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .stat-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Main Dashboard Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .panel-header h2 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Interactive Simulation Canvas */
+    .simulation-box {
+      background: #060911;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 16px;
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 380px;
+    }
+
+    .topology-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      margin: 25px 0;
+    }
+
+    .cable-line {
+      position: absolute;
+      top: 50%;
+      left: 60px;
+      right: 60px;
+      height: 4px;
+      background: #334155;
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .cable-line.active {
+      background: repeating-linear-gradient(90deg, #ef4444, #ef4444 10px, transparent 10px, transparent 20px);
+      animation: cablePulse 1s linear infinite;
+    }
+
+    @keyframes cablePulse {
+      from { background-position: 0 0; }
+      to { background-position: 40px 0; }
+    }
+
+    .node-box {
+      width: 140px;
+      background: #131d31;
+      border: 1.5px solid #2563eb;
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .node-box:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary-light);
+      box-shadow: 0 8px 20px rgba(37,99,235,0.3);
+    }
+
+    .node-box.attacker-node {
+      border-color: #ef4444;
+      background: #270f14;
+    }
+
+    .node-box.attacker-node:hover {
+      box-shadow: 0 8px 20px rgba(239,68,68,0.4);
+    }
+
+    .node-icon { font-size: 22px; margin-bottom: 4px; }
+    .node-name { font-size: 12.5px; font-weight: 800; color: #fff; }
+    .node-ip { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #38bdf8; }
+    .node-role { font-size: 10px; color: #94a3b8; margin-top: 3px; }
+
+    /* Animated Packet */
+    .packet-indicator {
+      width: 22px;
+      height: 22px;
+      background: #ef4444;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      display: none;
+      box-shadow: 0 0 12px #ef4444;
+      transition: left 2.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Simulation Control Buttons */
+    .sim-controls {
+      display: flex;
+      gap: 12px;
+      margin: 15px 0;
+    }
+
+    .btn-sim {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-sim.danger {
+      background: #dc2626;
+      color: #fff;
+    }
+
+    .btn-sim.danger:hover {
+      background: #b91c1c;
+      box-shadow: 0 4px 15px rgba(220,38,38,0.4);
+    }
+
+    .btn-sim.primary {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+    }
+
+    .btn-sim.primary:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    /* Sniffer Log Area */
+    .sniffer-console {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      min-height: 140px;
+      max-height: 180px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .log-line {
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .log-danger { color: #f87171; font-weight: 600; }
+    .log-success { color: #34d399; font-weight: 600; }
+    .log-info { color: #60a5fa; }
+    .log-warn { color: #fbbf24; }
+
+    /* Side Panel Tabs */
+    .tab-header {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      border-color: var(--primary-light);
+      color: #fff;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .threat-item {
+      background: #0d1525;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .threat-item:hover {
+      border-color: var(--primary-light);
+      transform: translateX(3px);
+    }
+
+    .threat-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .threat-desc {
+      font-size: 11.5px;
+      color: #94a3b8;
+      margin-top: 5px;
+      line-height: 1.45;
+    }
+
+    .threat-defense {
+      font-size: 11px;
+      color: #34d399;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .tag-crit {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="title-area">
+      <h1>🛡️ Phase 1 Interactive Simulation Dashboard</h1>
+      <span class="badge-group">Group 06</span>
+      <span class="badge-phase">Phase 1: Architecture & Baseline</span>
+    </div>
+    <div class="header-links">
+      <a href="Phase1_Visual_Slides.html" class="btn-link" target="_blank">
+        <span>🖥️ Visual Slides</span>
+      </a>
+      <a href="https://github.com/mohammadbanikhaled2003-a11y/Secure-Inter-Campus-Communication-Network" class="btn-link" target="_blank">
+        <span>🔗 GitHub Repo</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Top Metrics -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(37, 99, 235, 0.2); color: #60a5fa;">🖥️</div>
+      <div class="stat-info">
+        <h3>6 Isolated Nodes</h3>
+        <p>Lab Docker Topology</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">🛡️</div>
+      <div class="stat-info">
+        <h3>4 Trust Zones</h3>
+        <p>Boundaries (TB0 to TB3)</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">📋</div>
+      <div class="stat-info">
+        <h3>12 FRs & 14 SRs</h3>
+        <p>Specifications Matrix</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">⚠️</div>
+      <div class="stat-info">
+        <h3>10 Threats</h3>
+        <p>STRIDE Threat Matrix</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="dashboard-grid">
+    <!-- Left Main Panel: Visual Scenario Simulator -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2><span>⚡</span> Baseline Cleartext Traffic Simulation (Phase 1 WAN Exposure)</h2>
+        <span style="font-size: 12px; color: var(--accent); font-weight: 700;">Click the Red Button to Demonstrate Baseline Vulnerability</span>
+      </div>
+
+      <div class="simulation-box">
+        <!-- Topology Nodes Row -->
+        <div class="topology-row">
+          <div class="cable-line" id="cableLine"></div>
+          <div class="packet-indicator" id="packet"></div>
+
+          <!-- Node 1: Client Branch -->
+          <div class="node-box" onclick="showNodeInfo('client-br')">
+            <div class="node-icon">💻</div>
+            <div class="node-name">client-br</div>
+            <div class="node-ip">10.6.2.10</div>
+            <div class="node-role">Branch Campus Workstation</div>
+          </div>
+
+          <!-- Node 2: Gateway Branch -->
+          <div class="node-box" onclick="showNodeInfo('gw-branch')">
+            <div class="node-icon">🛡️</div>
+            <div class="node-name">gw-branch</div>
+            <div class="node-ip">172.16.6.20</div>
+            <div class="node-role">Branch Security Gateway</div>
+          </div>
+
+          <!-- Node 3: Attacker on WAN -->
+          <div class="node-box attacker-node" onclick="showNodeInfo('attacker')">
+            <div class="node-icon">⚠️</div>
+            <div class="node-name">attacker</div>
+            <div class="node-ip">172.16.6.66</div>
+            <div class="node-role">Untrusted Carrier WAN</div>
+          </div>
+
+          <!-- Node 4: Gateway HQ -->
+          <div class="node-box" onclick="showNodeInfo('gw-hq')">
+            <div class="node-icon">🛡️</div>
+            <div class="node-name">gw-hq</div>
+            <div class="node-ip">172.16.6.10</div>
+            <div class="node-role">HQ Security Gateway</div>
+          </div>
+
+          <!-- Node 5: Web HQ -->
+          <div class="node-box" onclick="showNodeInfo('web-hq')">
+            <div class="node-icon">🌐</div>
+            <div class="node-name">web-hq</div>
+            <div class="node-ip">10.6.1.10</div>
+            <div class="node-role">Campus Portal & mTLS</div>
+          </div>
+        </div>
+
+        <!-- Simulation Actions -->
+        <div class="sim-controls">
+          <button class="btn-sim danger" onclick="runBaselineAttack()">
+            <span>🚨 Simulate Cleartext Request (Phase 1 Baseline Leak)</span>
+          </button>
+          <button class="btn-sim primary" onclick="runSecuredSimulation()">
+            <span>🔒 Simulate Encrypted Tunnel (Target M3 / IPsec)</span>
+          </button>
+        </div>
+
+        <!-- Live Sniffer Output -->
+        <div class="sniffer-console" id="snifferLog">
+          <div class="log-line log-info">[SYSTEM STATUS] Group 06 isolated virtual lab topology initialized.</div>
+          <div class="log-line log-warn">[READY] Click the red button above to simulate unencrypted packet interception across the WAN.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side Panel: Interactive Threat & Architecture Inspector -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2><span>🔍</span> Threat Modeling & PKI Inspector</h2>
+      </div>
+
+      <div class="tab-header">
+        <button class="tab-btn active" onclick="switchTab('threats')">STRIDE Threats</button>
+        <button class="tab-btn" onclick="switchTab('pki')">Two-Tier PKI</button>
+        <button class="tab-btn" onclick="switchTab('trust')">Trust Zones</button>
+      </div>
+
+      <!-- Tab 1: Threats -->
+      <div class="tab-content active" id="tab-threats">
+        <div class="threat-item" onclick="triggerThreat('TH01')">
+          <div class="threat-title">
+            <span>TH-01: WAN Eavesdropping</span>
+            <span class="tag-crit">CRITICAL</span>
+          </div>
+          <div class="threat-desc">Adversary sniffs unencrypted cleartext payload traversing between campuses.</div>
+          <div class="threat-defense">✔ Defense: Site-to-site IKEv2 / IPsec tunnel with AES-256-GCM.</div>
+        </div>
+
+        <div class="threat-item" onclick="triggerThreat('TH02')">
+          <div class="threat-title">
+            <span>TH-02: Rogue CA MITM Spoofing</span>
+            <span class="tag-crit">CRITICAL</span>
+          </div>
+          <div class="threat-desc">Attacker presents unauthorized server certificate signed by rogue CA.</div>
+          <div class="threat-defense">✔ Defense: Strict certificate chaining validated up to offline Root CA only.</div>
+        </div>
+
+        <div class="threat-item" onclick="triggerThreat('TH03')">
+          <div class="threat-title">
+            <span>TH-03: Revoked Certificate Access</span>
+            <span class="tag-crit">HIGH</span>
+          </div>
+          <div class="threat-desc">Terminated staff member attempts access to /staff/ with revoked cert.</div>
+          <div class="threat-defense">✔ Defense: Real-time CRL check on mTLS; returns generic HTTP 403.</div>
+        </div>
+
+        <div class="threat-item" onclick="triggerThreat('TH05')">
+          <div class="threat-title">
+            <span>TH-05: Cleartext Leak on Tunnel Down</span>
+            <span class="tag-crit">CRITICAL</span>
+          </div>
+          <div class="threat-desc">IPsec daemon crashes; default routing exposes packets in cleartext (Fail-Open).</div>
+          <div class="threat-defense">✔ Defense: Fail-Closed firewall drops all non-ESP inter-LAN transit.</div>
+        </div>
+      </div>
+
+      <!-- Tab 2: PKI -->
+      <div class="tab-content" id="tab-pki">
+        <div style="font-size: 12px; line-height: 1.6; color: #cbd5e1;">
+          <div style="background: #2d1c03; border: 1px solid #f59e0b; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+            <strong style="color: #fbbf24;">👑 Offline Root CA: AABU SCP Root CA g06</strong><br>
+            • Algorithm: ECDSA P-384 / SHA-384 (5-Year Validity)<br>
+            • Deployment: Air-gapped, isolated from network and containers<br>
+            • Constraint: <code style="color: #38bdf8;">pathlen:1</code> (Signs Issuing CA only)
+          </div>
+          <div style="background: #0f2942; border: 1px solid #38bdf8; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+            <strong style="color: #38bdf8;">🏢 Online Issuing CA: AABU SCP Issuing CA g06</strong><br>
+            • Algorithm: ECDSA P-384 / SHA-384 (2-Year Validity)<br>
+            • Deployment: Online authority for leaf certificates & CRL<br>
+            • Constraint: <code style="color: #38bdf8;">pathlen:0</code> (Signs end-entities only)<br>
+            • CRL Distribution: <code style="color: #93c5fd;">http://pki.g06.scp.lab/crl/issuing.crl</code>
+          </div>
+          <div style="background: #1e293b; border: 1px solid #475569; padding: 10px; border-radius: 8px;">
+            <strong style="color: #fff;">📄 Leaf Entity Certificates:</strong><br>
+            • Web Portal: <code style="color: #34d399;">serverAuth</code> (portal.g06.scp.lab)<br>
+            • VPN Gateways: <code style="color: #34d399;">ipsecIKE</code> (Identity Pinning)<br>
+            • Staff Clients: <code style="color: #34d399;">clientAuth</code> (/staff/ mTLS access)
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Trust -->
+      <div class="tab-content" id="tab-trust">
+        <div style="font-size: 12.5px; line-height: 1.7; color: #cbd5e1;">
+          <p><strong style="color: #fbbf24;">TB0 (Root Realm):</strong> Air-gapped offline authority protecting the institutional root private key.</p>
+          <p style="margin-top: 6px;"><strong style="color: #60a5fa;">TB1 (HQ Enclave 10.6.1.0/24):</strong> High-trust zone hosting central web portal, CRL, and KDC ticket services.</p>
+          <p style="margin-top: 6px;"><strong style="color: #38bdf8;">TB2 (Branch Enclave 10.6.2.0/24):</strong> Authenticated local employee subnet accessing HQ via VPN.</p>
+          <p style="margin-top: 6px;"><strong style="color: #f87171;">TB3 (Untrusted WAN 172.16.6.0/24):</strong> Zero-trust network assumed to be fully compromised by active adversaries.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function runBaselineAttack() {
+      const packet = document.getElementById('packet');
+      const cable = document.getElementById('cableLine');
+      const log = document.getElementById('snifferLog');
+
+      // Reset
+      packet.style.display = 'block';
+      packet.style.left = '90px';
+      packet.style.background = '#ef4444';
+      packet.style.boxShadow = '0 0 14px #ef4444';
+      cable.className = 'cable-line active';
+
+      log.innerHTML = `<div class="log-line log-info">🚀 [STEP 1] client-br (10.6.2.10) sending unencrypted HTTP GET request to web-hq...</div>`;
+
+      // Animate packet to attacker
+      setTimeout(() => {
+        packet.style.left = '48%';
+      }, 50);
+
+      // Packet reaches attacker
+      setTimeout(() => {
+        log.innerHTML += `
+          <div class="log-line log-danger">🚨 [INTERCEPTED AT WAN] Attacker node (172.16.6.66) captured transit packet!</div>
+          <div class="log-line log-danger">💥 [SNIFFER DUMP] GET /staff/index.html HTTP/1.1</div>
+          <div class="log-line log-danger">💥 [CLEARTEXT EXPOSURE] Host: portal.g06.scp.lab | User: staff01 | Auth: CLEARTEXT</div>
+          <div class="log-line log-warn">📁 [BASELINE ARTIFACT] Traffic captured in: evidence/pcaps/M1_baseline_wan.pcap (Vulnerability Proven)</div>
+        `;
+        log.scrollTop = log.scrollHeight;
+      }, 1200);
+
+      // Packet reaches destination
+      setTimeout(() => {
+        packet.style.left = '90%';
+        log.innerHTML += `<div class="log-line log-info">🏁 [STEP 2] Packet delivered to web-hq (10.6.1.10), but confidentiality was completely breached in transit.</div>`;
+        log.scrollTop = log.scrollHeight;
+        cable.className = 'cable-line';
+      }, 2400);
+    }
+
+    function runSecuredSimulation() {
+      const packet = document.getElementById('packet');
+      const cable = document.getElementById('cableLine');
+      const log = document.getElementById('snifferLog');
+
+      packet.style.display = 'block';
+      packet.style.left = '90px';
+      packet.style.background = '#3b82f6';
+      packet.style.boxShadow = '0 0 14px #3b82f6';
+      cable.className = 'cable-line';
+
+      log.innerHTML = `<div class="log-line log-info">🔒 [SIMULATION TARGET: M3] Routing traffic inside IKEv2/IPsec ESP tunnel (AES-256-GCM + PFS Curve25519)...</div>`;
+
+      setTimeout(() => {
+        packet.style.left = '48%';
+      }, 50);
+
+      setTimeout(() => {
+        log.innerHTML += `
+          <div class="log-line log-success">🛡️ [IPSEC ENCAPSULATION] Inter-LAN packet encapsulated into ESP payload.</div>
+          <div class="log-line log-success">👀 [ATTACKER VIEW] Attacker observes opaque ciphertext: ESP SPI=0xc89f021b (Zero plaintext visible).</div>
+          <div class="log-line log-success">✔ [SECURITY CONFIRMED] Credentials, session tokens, and URI paths fully protected.</div>
+        `;
+        log.scrollTop = log.scrollHeight;
+      }, 1200);
+
+      setTimeout(() => {
+        packet.style.left = '90%';
+        log.innerHTML += `<div class="log-line log-info">🏁 [SAFE DELIVERY] ESP packet decrypted at gw-hq and forwarded securely to web-hq.</div>`;
+        log.scrollTop = log.scrollHeight;
+      }, 2400);
+    }
+
+    function showNodeInfo(node) {
+      const log = document.getElementById('snifferLog');
+      if (node === 'client-br') {
+        log.innerHTML += `<div class="log-line log-info">🔍 [NODE INSPECT: client-br] Branch workstation (10.6.2.10). Initiates mTLS and Kerberos auth.</div>`;
+      } else if (node === 'gw-branch') {
+        log.innerHTML += `<div class="log-line log-info">🔍 [NODE INSPECT: gw-branch] Security Gateway (10.6.2.1 / 172.16.6.20). Enforces Fail-Closed firewall.</div>`;
+      } else if (node === 'attacker') {
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [NODE INSPECT: attacker] Untrusted WAN node (172.16.6.66). Executes Sniffing, MITM & Replays.</div>`;
+      } else if (node === 'gw-hq') {
+        log.innerHTML += `<div class="log-line log-info">🔍 [NODE INSPECT: gw-hq] HQ Gateway (10.6.1.1 / 172.16.6.10). Enforces Gateway Identity Pinning.</div>`;
+      } else if (node === 'web-hq') {
+        log.innerHTML += `<div class="log-line log-info">🔍 [NODE INSPECT: web-hq] Portal (10.6.1.10). Nginx TLS 1.3 + /staff/ mTLS + CRL distribution point.</div>`;
+      }
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      if (tab === 'threats') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-threats').classList.add('active');
+      } else if (tab === 'pki') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('tab-pki').classList.add('active');
+      } else {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('tab-trust').classList.add('active');
+      }
+    }
+
+    function triggerThreat(id) {
+      const log = document.getElementById('snifferLog');
+      if (id === 'TH01') {
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-01] WAN cleartext sniffing detected. Mitigated by Test T7 (IPsec ESP Tunnel).</div>`;
+      } else if (id === 'TH02') {
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-02] Rogue CA handshake rejected! Leaf signature does not chain to trusted Root CA.</div>`;
+      } else if (id === 'TH03') {
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-03] Revoked cert presented to /staff/. Nginx verified CRL -> Returned HTTP 403 Forbidden.</div>`;
+      } else if (id === 'TH05') {
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-05] IPsec daemon terminated! Fail-Closed firewall immediately dropped inter-LAN packets.</div>`;
+      }
+      log.scrollTop = log.scrollHeight;
+    }
+  </script>
+</body>
+</html>
