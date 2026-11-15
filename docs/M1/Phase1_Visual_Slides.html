@@ -109,6 +109,10 @@
       transform: translateY(-1px);
     }
 
+    .slide-radio-input {
+      display: none;
+    }
+
     .slide-pane {
       flex: 1;
       padding: 24px 36px 16px 36px;
@@ -117,7 +121,34 @@
       animation: fadeIn 0.35s ease-out forwards;
     }
 
-    .slide-pane.active { display: flex; }
+    /* Zero-JS CSS Slide Switching */
+    #s1:checked ~ .slide-deck-container #slide1,
+    #s2:checked ~ .slide-deck-container #slide2,
+    #s3:checked ~ .slide-deck-container #slide3,
+    #s4:checked ~ .slide-deck-container #slide4,
+    #s5:checked ~ .slide-deck-container #slide5 {
+      display: flex;
+    }
+
+    #s1:checked ~ .slide-deck-container #nav1,
+    #s2:checked ~ .slide-deck-container #nav2,
+    #s3:checked ~ .slide-deck-container #nav3,
+    #s4:checked ~ .slide-deck-container #nav4,
+    #s5:checked ~ .slide-deck-container #nav5 {
+      display: flex;
+    }
+
+    .badge-s1, .badge-s2, .badge-s3, .badge-s4, .badge-s5 {
+      display: none;
+    }
+
+    #s1:checked ~ .slide-deck-container .badge-s1,
+    #s2:checked ~ .slide-deck-container .badge-s2,
+    #s3:checked ~ .slide-deck-container .badge-s3,
+    #s4:checked ~ .slide-deck-container .badge-s4,
+    #s5:checked ~ .slide-deck-container .badge-s5 {
+      display: inline;
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -169,7 +200,7 @@
       padding: 14px 32px;
       background: rgba(11, 15, 25, 0.9);
       border-top: 1px solid var(--card-border);
-      display: flex;
+      display: none;
       justify-content: space-between;
       align-items: center;
     }
@@ -177,22 +208,37 @@
     .btn {
       background: var(--card-border);
       color: #fff;
-      border: none;
+      border: 1px solid #334155;
       padding: 8px 22px;
       border-radius: 8px;
       font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
       transition: all 0.2s;
+      user-select: none;
+      text-decoration: none;
     }
 
-    .btn:hover:not(:disabled) { background: var(--primary); }
-    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn:hover:not(.disabled) {
+      background: var(--primary);
+      border-color: var(--primary-light);
+      transform: translateY(-1px);
+    }
 
-    .nav-indicator { display: flex; gap: 8px; }
+    .btn.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .nav-indicator {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
 
     .indicator-pill {
       width: 12px;
@@ -200,7 +246,12 @@
       border-radius: 50%;
       background: #334155;
       cursor: pointer;
+      display: inline-block;
       transition: all 0.25s;
+    }
+
+    .indicator-pill:hover {
+      background: #64748b;
     }
 
     .indicator-pill.active {
@@ -211,6 +262,13 @@
   </style>
 </head>
 <body>
+
+  <!-- Hidden radio inputs for pure CSS slide navigation (Zero JS required, works everywhere) -->
+  <input type="radio" name="slide-radio" id="s1" checked class="slide-radio-input">
+  <input type="radio" name="slide-radio" id="s2" class="slide-radio-input">
+  <input type="radio" name="slide-radio" id="s3" class="slide-radio-input">
+  <input type="radio" name="slide-radio" id="s4" class="slide-radio-input">
+  <input type="radio" name="slide-radio" id="s5" class="slide-radio-input">
 
   <div class="slide-deck-container">
     <!-- Top Bar -->
@@ -223,13 +281,19 @@
           <span>🔗 GitHub Repo</span>
         </a>
       </div>
-      <div class="slide-counter" id="slideBadge">Slide 1 of 5</div>
+      <div class="slide-counter" id="slideBadge">
+        <span class="badge-s1">Slide 1 of 5</span>
+        <span class="badge-s2">Slide 2 of 5</span>
+        <span class="badge-s3">Slide 3 of 5</span>
+        <span class="badge-s4">Slide 4 of 5</span>
+        <span class="badge-s5">Slide 5 of 5</span>
+      </div>
     </div>
 
     <!-- ==========================================
          SLIDE 1: Project Architecture & Scope
          ========================================== -->
-    <div class="slide-pane active" id="slide1">
+    <div class="slide-pane" id="slide1">
       <div class="slide-header">
         <h1><span>🎯</span> Slide 1: Inter-Campus Network Architecture & Scope</h1>
         <div class="subtitle">Secure Inter-Campus Communication Network — Connecting HQ & Branch across Untrusted WAN</div>
@@ -581,72 +645,93 @@
       </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-bar">
-      <button class="btn" id="prevBtn" onclick="prevSlide()" disabled>
-        <span>◀</span> Previous
-      </button>
+    <!-- ==========================================
+         ZERO-JS PURE CSS BOTTOM NAVIGATION BARS
+         Works even when JavaScript is disabled/sandboxed on GitHub
+         ========================================== -->
 
-      <div class="nav-indicator" id="navIndicator">
-        <div class="indicator-pill active" onclick="goToSlide(0)"></div>
-        <div class="indicator-pill" onclick="goToSlide(1)"></div>
-        <div class="indicator-pill" onclick="goToSlide(2)"></div>
-        <div class="indicator-pill" onclick="goToSlide(3)"></div>
-        <div class="indicator-pill" onclick="goToSlide(4)"></div>
+    <!-- Slide 1 Bottom Bar -->
+    <div class="bottom-bar" id="nav1">
+      <span class="btn disabled"><span>◀</span> Previous</span>
+      <div class="nav-indicator">
+        <label for="s1" class="indicator-pill active" title="Slide 1"></label>
+        <label for="s2" class="indicator-pill" title="Slide 2"></label>
+        <label for="s3" class="indicator-pill" title="Slide 3"></label>
+        <label for="s4" class="indicator-pill" title="Slide 4"></label>
+        <label for="s5" class="indicator-pill" title="Slide 5"></label>
       </div>
+      <label for="s2" class="btn">Next <span>▶</span></label>
+    </div>
 
-      <button class="btn" id="nextBtn" onclick="nextSlide()">
-        Next <span>▶</span>
-      </button>
+    <!-- Slide 2 Bottom Bar -->
+    <div class="bottom-bar" id="nav2">
+      <label for="s1" class="btn"><span>◀</span> Previous</label>
+      <div class="nav-indicator">
+        <label for="s1" class="indicator-pill" title="Slide 1"></label>
+        <label for="s2" class="indicator-pill active" title="Slide 2"></label>
+        <label for="s3" class="indicator-pill" title="Slide 3"></label>
+        <label for="s4" class="indicator-pill" title="Slide 4"></label>
+        <label for="s5" class="indicator-pill" title="Slide 5"></label>
+      </div>
+      <label for="s3" class="btn">Next <span>▶</span></label>
+    </div>
+
+    <!-- Slide 3 Bottom Bar -->
+    <div class="bottom-bar" id="nav3">
+      <label for="s2" class="btn"><span>◀</span> Previous</label>
+      <div class="nav-indicator">
+        <label for="s1" class="indicator-pill" title="Slide 1"></label>
+        <label for="s2" class="indicator-pill" title="Slide 2"></label>
+        <label for="s3" class="indicator-pill active" title="Slide 3"></label>
+        <label for="s4" class="indicator-pill" title="Slide 4"></label>
+        <label for="s5" class="indicator-pill" title="Slide 5"></label>
+      </div>
+      <label for="s4" class="btn">Next <span>▶</span></label>
+    </div>
+
+    <!-- Slide 4 Bottom Bar -->
+    <div class="bottom-bar" id="nav4">
+      <label for="s3" class="btn"><span>◀</span> Previous</label>
+      <div class="nav-indicator">
+        <label for="s1" class="indicator-pill" title="Slide 1"></label>
+        <label for="s2" class="indicator-pill" title="Slide 2"></label>
+        <label for="s3" class="indicator-pill" title="Slide 3"></label>
+        <label for="s4" class="indicator-pill active" title="Slide 4"></label>
+        <label for="s5" class="indicator-pill" title="Slide 5"></label>
+      </div>
+      <label for="s5" class="btn">Next <span>▶</span></label>
+    </div>
+
+    <!-- Slide 5 Bottom Bar -->
+    <div class="bottom-bar" id="nav5">
+      <label for="s4" class="btn"><span>◀</span> Previous</label>
+      <div class="nav-indicator">
+        <label for="s1" class="indicator-pill" title="Slide 1"></label>
+        <label for="s2" class="indicator-pill" title="Slide 2"></label>
+        <label for="s3" class="indicator-pill" title="Slide 3"></label>
+        <label for="s4" class="indicator-pill" title="Slide 4"></label>
+        <label for="s5" class="indicator-pill active" title="Slide 5"></label>
+      </div>
+      <span class="btn disabled">Next <span>▶</span></span>
     </div>
   </div>
 
   <script>
-    let currentSlide = 0;
-    const totalSlides = 5;
-
-    function updateSlide() {
-      for (let i = 0; i < totalSlides; i++) {
-        const pane = document.getElementById(`slide${i+1}`);
-        const pill = document.getElementsByClassName('indicator-pill')[i];
-        if (i === currentSlide) {
-          pane.classList.add('active');
-          pill.classList.add('active');
-        } else {
-          pane.classList.remove('active');
-          pill.classList.remove('active');
-        }
-      }
-
-      document.getElementById('slideBadge').innerText = `Slide ${currentSlide + 1} of ${totalSlides}`;
-      document.getElementById('prevBtn').disabled = (currentSlide === 0);
-      document.getElementById('nextBtn').disabled = (currentSlide === totalSlides - 1);
-    }
-
-    function nextSlide() {
-      if (currentSlide < totalSlides - 1) {
-        currentSlide++;
-        updateSlide();
-      }
-    }
-
-    function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updateSlide();
-      }
-    }
-
-    function goToSlide(index) {
-      currentSlide = index;
-      updateSlide();
-    }
-
+    // Optional Keyboard Navigation (Arrow Keys) when JavaScript is available
     document.addEventListener('keydown', (e) => {
+      const radios = [
+        document.getElementById('s1'),
+        document.getElementById('s2'),
+        document.getElementById('s3'),
+        document.getElementById('s4'),
+        document.getElementById('s5')
+      ];
+      let cur = radios.findIndex(r => r && r.checked);
+      if (cur === -1) cur = 0;
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        nextSlide();
+        if (cur < radios.length - 1) radios[cur + 1].checked = true;
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        prevSlide();
+        if (cur > 0) radios[cur - 1].checked = true;
       }
     });
   </script>
