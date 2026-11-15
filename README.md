@@ -2,6 +2,12 @@
 **Course:** Secure Communication Protocols (1305301) — First Semester 2026/2027  
 **Faculty:** Prince Al Hussein bin Abdullah II Faculty of Information Technology  
 **Institution:** Al al-Bayt University (AABU)  
+**Assigned Group:** Group 06 (`g06` / `GROUP_ID=06`, `GROUP_NUM=6`)  
+
+> 🎯 **Phase 1 (Milestone 1) Quick Links:**  
+> - ⚡ **[Phase 1 Interactive Simulation Dashboard (Live Demo)](docs/M1/Phase1_Interactive_Dashboard.html)**  
+> - 🖥️ **[Phase 1 Visual Architecture Slides (English)](docs/M1/Phase1_Visual_Slides.html)**  
+> - 📄 **[Phase 1 Comprehensive Engineering Documentation (English)](docs/M1/Phase1_Documentation_Report.md)**  
 
 ---
 
@@ -9,16 +15,16 @@
 This project implements, hardens, and verifies an end-to-end secure communication infrastructure connecting the Headquarters Campus (**HQ**) and Branch Campus (**Branch**) over an untrusted Wide Area Network (**WAN**).
 
 ```
-[Branch LAN: 10.G.2.0/24]                  [Untrusted WAN: 172.16.G.0/24]                  [HQ LAN: 10.G.1.0/24]
+[Branch LAN: 10.6.2.0/24]                  [Untrusted WAN: 172.16.6.0/24]                  [HQ LAN: 10.6.1.0/24]
        client-br                                      attacker                                     web-hq (Portal/mTLS)
-      (10.G.2.10)                                   (172.16.G.66)                                       (10.G.1.10)
+      (10.6.2.10)                                   (172.16.6.66)                                       (10.6.1.10)
            |                                              |                                                  |
        gw-branch <================== IKEv2 / ESP IPsec Tunnel (PFS) ==================>                    gw-hq
-  (WAN: 172.16.G.20)                           (Mutual X.509)                                       (WAN: 172.16.G.10)
-  (LAN: 10.G.2.1)                                                                                   (LAN: 10.G.1.1)
+  (WAN: 172.16.6.20)                           (Mutual X.509)                                       (WAN: 172.16.6.10)
+  (LAN: 10.6.2.1)                                                                                   (LAN: 10.6.1.1)
                                                                                                              |
                                                                                                             kdc
-                                                                                                        (10.G.1.20)
+                                                                                                        (10.6.1.20)
 ```
 
 The system is delivered through 4 cumulative Milestones:
