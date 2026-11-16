@@ -548,28 +548,37 @@
 
           <!-- Right: STRIDE Threat Controls -->
           <rect x="560" y="20" width="510" height="475" rx="14" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-          <text x="815" y="55" fill="#fbbf24" font-size="16" font-weight="bold" text-anchor="middle">🛡️ STRIDE Threat Modeling & Countermeasures</text>
+          <text x="815" y="48" fill="#fbbf24" font-size="15" font-weight="bold" text-anchor="middle">🛡️ Complete STRIDE Threat Model (S - T - R - I - D - E)</text>
 
-          <rect x="580" y="80" width="470" height="65" rx="8" fill="#1e293b"/>
-          <text x="595" y="105" fill="#f87171" font-size="12" font-weight="bold">TH-01: Information Disclosure (WAN Eavesdropping)</text>
-          <text x="595" y="128" fill="#34d399" font-size="11.5">Defense: Site-to-Site IKEv2 / ESP IPsec with AES-256-GCM & PFS</text>
+          <!-- [S] Spoofing -->
+          <rect x="580" y="62" width="470" height="60" rx="8" fill="#1e293b"/>
+          <text x="595" y="85" fill="#f87171" font-size="11.5" font-weight="bold">[S] Spoofing: Rogue CA MITM & Impersonation (TH-02)</text>
+          <text x="595" y="105" fill="#34d399" font-size="10.5">Defense: Strict client certificate validation pinning offline Root CA only</text>
 
-          <rect x="580" y="155" width="470" height="65" rx="8" fill="#1e293b"/>
-          <text x="595" y="180" fill="#f87171" font-size="12" font-weight="bold">TH-02: Spoofing (Rogue CA Man-in-the-Middle)</text>
-          <text x="595" y="203" fill="#34d399" font-size="11.5">Defense: Strict Chain Validation up to Offline Root CA Only</text>
+          <!-- [T] Tampering -->
+          <rect x="580" y="130" width="470" height="60" rx="8" fill="#1e293b"/>
+          <text x="595" y="153" fill="#f87171" font-size="11.5" font-weight="bold">[T] Tampering: Ciphertext Bit-Flipping & Modification (TH-06)</text>
+          <text x="595" y="173" fill="#34d399" font-size="10.5">Defense: Authenticated Encryption (AES-GCM / ChaCha20-Poly1305) & HMAC-SHA256</text>
 
-          <rect x="580" y="230" width="470" height="65" rx="8" fill="#1e293b"/>
-          <text x="595" y="255" fill="#f87171" font-size="12" font-weight="bold">TH-03: Elevation of Privilege (Revoked Certificate Access)</text>
-          <text x="595" y="278" fill="#34d399" font-size="11.5">Defense: Real-Time CRL Verification on mTLS; Returns Generic 403</text>
+          <!-- [R] Repudiation -->
+          <rect x="580" y="198" width="470" height="60" rx="8" fill="#1e293b"/>
+          <text x="595" y="221" fill="#f87171" font-size="11.5" font-weight="bold">[R] Repudiation: Denial of Staff Admin Action (TH-10)</text>
+          <text x="595" y="241" fill="#34d399" font-size="10.5">Defense: Immutable audit logging of authenticated client certificate DN ($ssl_client_s_dn)</text>
 
-          <rect x="580" y="305" width="470" height="65" rx="8" fill="#1e293b"/>
-          <text x="595" y="330" fill="#f87171" font-size="12" font-weight="bold">TH-05: Information Disclosure (Tunnel Down Leak)</text>
-          <text x="595" y="353" fill="#34d399" font-size="11.5">Defense: Fail-Closed Gateway Firewall Drops Non-ESP Transit Packets</text>
+          <!-- [I] Information Disclosure -->
+          <rect x="580" y="266" width="470" height="60" rx="8" fill="#1e293b"/>
+          <text x="595" y="289" fill="#f87171" font-size="11.5" font-weight="bold">[I] Information Disclosure: WAN Eavesdropping (TH-01)</text>
+          <text x="595" y="309" fill="#34d399" font-size="10.5">Defense: Site-to-site IKEv2 / ESP IPsec tunnel with AES-256-GCM & Curve25519 PFS</text>
 
-          <rect x="580" y="380" width="470" height="75" rx="8" fill="#1e293b"/>
-          <text x="595" y="405" fill="#f87171" font-size="12" font-weight="bold">TH-07: Elevation of Privilege (Ticket Replay Attack)</text>
-          <text x="595" y="428" fill="#34d399" font-size="11.5">Defense: 300s Timestamp Validity Window + Replay Cache in Memory</text>
-          <text x="595" y="445" fill="#93c5fd" font-size="10.5">Logs (Client, TS) tuples and immediately rejects duplicated tokens</text>
+          <!-- [D] Denial of Service -->
+          <rect x="580" y="334" width="470" height="60" rx="8" fill="#1e293b"/>
+          <text x="595" y="357" fill="#f87171" font-size="11.5" font-weight="bold">[D] Denial of Service: Cleartext Leak on Tunnel Drop (TH-05)</text>
+          <text x="595" y="377" fill="#34d399" font-size="10.5">Defense: Fail-Closed gateway firewall (gw_firewall.sh) dropping non-ESP transit</text>
+
+          <!-- [E] Elevation of Privilege -->
+          <rect x="580" y="402" width="470" height="60" rx="8" fill="#1e293b"/>
+          <text x="595" y="425" fill="#f87171" font-size="11.5" font-weight="bold">[E] Elevation of Privilege: Revoked Certs & Replay (TH-03 / TH-07)</text>
+          <text x="595" y="445" fill="#34d399" font-size="10.5">Defense: Real-time CRL verification (403 Forbidden) & 300s Replay Cache</text>
         </svg>
       </div>
     </div>

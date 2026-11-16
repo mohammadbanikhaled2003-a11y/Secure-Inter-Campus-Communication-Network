@@ -397,40 +397,40 @@ client-br (10.6.2.10)                        attacker (172.16.6.66)             
         </thead>
         <tbody>
           <tr>
-            <td><strong>Information Disclosure</strong></td>
-            <td>Eavesdropping on WAN cleartext traffic (TH-01)</td>
+            <td><strong>[S] Spoofing</strong></td>
+            <td>Rogue CA MITM & Gateway Impersonation (TH-02 / TH-04)</td>
             <td><span class="tag-critical">CRITICAL</span></td>
-            <td>IKEv2 IPsec site-to-site tunnel with AES-256-GCM and PFS (Curve25519)</td>
+            <td>Strict client validation pinning offline Root CA anchor & gateway identity pinning</td>
           </tr>
           <tr>
-            <td><strong>Spoofing</strong></td>
-            <td>Rogue CA Man-in-the-Middle attack (TH-02)</td>
-            <td><span class="tag-critical">CRITICAL</span></td>
-            <td>Strict client validation enforcing offline Root CA trust anchor</td>
-          </tr>
-          <tr>
-            <td><strong>Elevation of Privilege</strong></td>
-            <td>Revoked employee certificate accessing <code>/staff/</code> (TH-03)</td>
+            <td><strong>[T] Tampering</strong></td>
+            <td>Ciphertext bit-flipping & protocol downgrade in transit (TH-06 / TH-08)</td>
             <td><span class="tag-high">HIGH</span></td>
-            <td>Nginx mTLS verification with live CRL checking and HTTP 403 response</td>
+            <td>Authenticated Encryption with Associated Data (AEAD: AES-256-GCM) & HMAC-SHA256</td>
           </tr>
           <tr>
-            <td><strong>Spoofing</strong></td>
-            <td>Gateway impersonation via stolen staff cert (TH-04)</td>
+            <td><strong>[R] Repudiation</strong></td>
+            <td>Denial of privileged administrative actions on <code>/staff/</code> (TH-10)</td>
+            <td><span class="tag-high">MEDIUM</span></td>
+            <td>Cryptographic non-repudiation audit logging of authenticated client subject DN</td>
+          </tr>
+          <tr>
+            <td><strong>[I] Information Disclosure</strong></td>
+            <td>Eavesdropping on WAN cleartext transit traffic (TH-01)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>IKEv2 IPsec site-to-site tunnel with AES-256-GCM and Curve25519 PFS</td>
+          </tr>
+          <tr>
+            <td><strong>[D] Denial of Service</strong></td>
+            <td>Cleartext leak & fail-open routing upon IPsec tunnel failure (TH-05)</td>
+            <td><span class="tag-critical">CRITICAL</span></td>
+            <td>Fail-Closed gateway firewall (<code>gw_firewall.sh</code>) dropping any non-ESP inter-LAN traffic</td>
+          </tr>
+          <tr>
+            <td><strong>[E] Elevation of Privilege</strong></td>
+            <td>Revoked employee certificate access & ticket replay (TH-03 / TH-07)</td>
             <td><span class="tag-high">HIGH</span></td>
-            <td>Gateway identity pinning (<code>gw-branch.g06.scp.lab</code>) & dedicated ipsecIKE EKU</td>
-          </tr>
-          <tr>
-            <td><strong>Information Disclosure</strong></td>
-            <td>Cleartext leak upon IPsec tunnel failure (TH-05)</td>
-            <td><span class="tag-critical">CRITICAL</span></td>
-            <td>Fail-Closed firewall (<code>gw_firewall.sh</code>) dropping any non-ESP inter-LAN traffic</td>
-          </tr>
-          <tr>
-            <td><strong>Replay Attack</strong></td>
-            <td>Sniffing and replaying authentication tickets (TH-07)</td>
-            <td><span class="tag-critical">CRITICAL</span></td>
-            <td>300-second freshness window and in-memory Replay Cache</td>
+            <td>Nginx mTLS live CRL check (HTTP 403) and 300s freshness window with Replay Cache</td>
           </tr>
         </tbody>
       </table>

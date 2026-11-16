@@ -552,42 +552,60 @@
         <button class="tab-btn" onclick="switchTab('trust')">Trust Zones</button>
       </div>
 
-      <!-- Tab 1: Threats -->
+      <!-- Tab 1: Threats (Full STRIDE Model: S-T-R-I-D-E) -->
       <div class="tab-content active" id="tab-threats">
+        <div class="threat-item" onclick="triggerThreat('TH02')">
+          <div class="threat-title">
+            <span>[S] TH-02: Spoofing (Rogue CA MITM)</span>
+            <span class="tag-crit">CRITICAL</span>
+          </div>
+          <div class="threat-desc">Attacker presents unauthorized server certificate signed by untrusted rogue CA.</div>
+          <div class="threat-defense">✔ Defense: Strict client validation enforcing offline Root CA trust anchor only.</div>
+        </div>
+
+        <div class="threat-item" onclick="triggerThreat('TH06')">
+          <div class="threat-title">
+            <span>[T] TH-06: Tampering (Bit-Flipping / Ciphertext Alteration)</span>
+            <span class="tag-crit" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">HIGH</span>
+          </div>
+          <div class="threat-desc">Adversary modifies bytes or attempts cryptographic cipher suite downgrade.</div>
+          <div class="threat-defense">✔ Defense: AEAD (AES-256-GCM / Poly1305) with HMAC integrity authentication tag.</div>
+        </div>
+
+        <div class="threat-item" onclick="triggerThreat('TH10')">
+          <div class="threat-title">
+            <span>[R] TH-10: Repudiation (Denial of Privileged Action)</span>
+            <span class="tag-crit" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">MEDIUM</span>
+          </div>
+          <div class="threat-desc">Staff member executes restricted modification on /staff/ and denies responsibility.</div>
+          <div class="threat-defense">✔ Defense: Non-repudiation audit logging of authenticated client certificate DN ($ssl_client_s_dn).</div>
+        </div>
+
         <div class="threat-item" onclick="triggerThreat('TH01')">
           <div class="threat-title">
-            <span>TH-01: WAN Eavesdropping</span>
+            <span>[I] TH-01: Information Disclosure (WAN Eavesdropping)</span>
             <span class="tag-crit">CRITICAL</span>
           </div>
           <div class="threat-desc">Adversary sniffs unencrypted cleartext payload traversing between campuses.</div>
-          <div class="threat-defense">✔ Defense: Site-to-site IKEv2 / IPsec tunnel with AES-256-GCM.</div>
-        </div>
-
-        <div class="threat-item" onclick="triggerThreat('TH02')">
-          <div class="threat-title">
-            <span>TH-02: Rogue CA MITM Spoofing</span>
-            <span class="tag-crit">CRITICAL</span>
-          </div>
-          <div class="threat-desc">Attacker presents unauthorized server certificate signed by rogue CA.</div>
-          <div class="threat-defense">✔ Defense: Strict certificate chaining validated up to offline Root CA only.</div>
-        </div>
-
-        <div class="threat-item" onclick="triggerThreat('TH03')">
-          <div class="threat-title">
-            <span>TH-03: Revoked Certificate Access</span>
-            <span class="tag-crit">HIGH</span>
-          </div>
-          <div class="threat-desc">Terminated staff member attempts access to /staff/ with revoked cert.</div>
-          <div class="threat-defense">✔ Defense: Real-time CRL check on mTLS; returns generic HTTP 403.</div>
+          <div class="threat-defense">✔ Defense: Site-to-site IKEv2 / IPsec tunnel with AES-256-GCM and Curve25519 PFS.</div>
         </div>
 
         <div class="threat-item" onclick="triggerThreat('TH05')">
           <div class="threat-title">
-            <span>TH-05: Cleartext Leak on Tunnel Down</span>
+            <span>[D] TH-05: Denial of Service (Cleartext Leak / Fail-Open)</span>
             <span class="tag-crit">CRITICAL</span>
           </div>
           <div class="threat-desc">IPsec daemon crashes; default routing exposes packets in cleartext (Fail-Open).</div>
-          <div class="threat-defense">✔ Defense: Fail-Closed firewall drops all non-ESP inter-LAN transit.</div>
+          <div class="threat-defense">✔ Defense: Fail-Closed firewall drops all non-ESP inter-LAN transit immediately.</div>
+        </div>
+
+        <div class="threat-item" onclick="triggerThreat('TH03')">
+          <div class="threat-title">
+            <span>[E] TH-03: Elevation of Privilege (Revoked Cert / Replay)</span>
+            <span class="tag-crit" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">HIGH</span>
+          </div>
+          <div class="threat-desc">Terminated staff member uses revoked certificate or replayed ticket on /staff/.</div>
+          <div class="threat-defense">✔ Defense: Real-time CRL verification (returns HTTP 403) and 300s Replay Cache window.</div>
         </div>
       </div>
 
@@ -735,13 +753,17 @@
     function triggerThreat(id) {
       const log = document.getElementById('snifferLog');
       if (id === 'TH01') {
-        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-01] WAN cleartext sniffing detected. Mitigated by Test T7 (IPsec ESP Tunnel).</div>`;
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [[I] TH-01 Information Disclosure] WAN cleartext sniffing detected. Mitigated by Test T7 (IPsec ESP Tunnel).</div>`;
       } else if (id === 'TH02') {
-        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-02] Rogue CA handshake rejected! Leaf signature does not chain to trusted Root CA.</div>`;
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [[S] TH-02 Spoofing] Rogue CA handshake rejected! Leaf signature does not chain to trusted Root CA (Test T5).</div>`;
       } else if (id === 'TH03') {
-        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-03] Revoked cert presented to /staff/. Nginx verified CRL -> Returned HTTP 403 Forbidden.</div>`;
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [[E] TH-03 Elevation of Privilege] Revoked cert presented to /staff/. Nginx verified CRL -> HTTP 403 Forbidden (Test T4).</div>`;
       } else if (id === 'TH05') {
-        log.innerHTML += `<div class="log-line log-danger">⚠️ [TEST TH-05] IPsec daemon terminated! Fail-Closed firewall immediately dropped inter-LAN packets.</div>`;
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [[D] TH-05 Denial of Service] IPsec daemon terminated! Fail-Closed firewall immediately dropped inter-LAN packets (Test T9).</div>`;
+      } else if (id === 'TH06') {
+        log.innerHTML += `<div class="log-line log-danger">⚠️ [[T] TH-06 Tampering] 1-byte ciphertext modification detected! AES-GCM authentication tag verification failed (Test T2).</div>`;
+      } else if (id === 'TH10') {
+        log.innerHTML += `<div class="log-line log-info">ℹ️ [[R] TH-10 Non-Repudiation] Privileged action audit-logged with client DN 'staff01@g06.scp.lab' and timestamp (Test T14).</div>`;
       }
       log.scrollTop = log.scrollHeight;
     }
